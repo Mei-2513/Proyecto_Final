@@ -1,9 +1,13 @@
 package proyecto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Sede {
 	
 	String nombre;
 	String campus;
+	Map<String, Libro> libros= new HashMap<>();
 	
 	
 	public Sede(String nombre, String campus) {
