@@ -22,6 +22,10 @@ public class Libro {
 		this.sede = sede;
 		this.cantidadCopias = cantidadCopias;
 	}
+
+
+	
+	
 	
 	
 

@@ -17,17 +17,19 @@ public class Sede {
 	}
 	
 	public void agregarLibro(Libro libro) {
+		 libros.put(libro.ISBN, libro);
 		
 	}
 	
 	public void eliminarLibro(Libro libro) {
+		libros.remove(libro.ISBN);
 		
 	}
 	
 	public void listarLibros() {
-		
-	}
-	
-	
-
+		 System.out.println("Libros en la Sede " + nombre + " (" + campus + "):");
+         for (Libro libro : libros.values()) {
+             System.out.println("Título: " + libro.titulo + ", ISBN: " + libro.ISBN);
+         }
+     }
 }
