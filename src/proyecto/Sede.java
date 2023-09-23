@@ -12,6 +12,14 @@ public class Sede {
 		this.campus = campus;
 	}
 	
+	public void agregarLibro(Libro libro) {
+		
+	}
+	
+	public void eliminarLibro(Libro libro) {
+		
+	}
+	
 	
 
 }
