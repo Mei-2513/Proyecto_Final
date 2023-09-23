@@ -11,17 +11,19 @@ public class Libro {
 	int cantidadCopias;
 	
 	
-	public Libro(String titulo, String iSBN, int volumen, String editorial, Autor autor, Sede sede,
-			int cantidadCopias) {
-	
-		this.titulo = titulo;
-		ISBN = iSBN;
-		this.volumen = volumen;
-		this.editorial = editorial;
-		this.autor = autor;
-		this.sede = sede;
-		this.cantidadCopias = cantidadCopias;
+	public Libro(String titulo, String ISBN, int volumen, String editorial, Autor autor, Sede sede, int cantidadCopias) {
+	    this.titulo = titulo;
+	    this.ISBN = ISBN;
+	    this.volumen = volumen;
+	    this.editorial = editorial;
+	    this.autor = autor;
+	    this.sede = sede; // Ahora acepta una instancia de Sede
+	    this.cantidadCopias = cantidadCopias;
 	}
+
+
+
+
 
 
 	
