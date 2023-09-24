@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BibliotecaApp extends JFrame {
     private Biblioteca biblioteca = Biblioteca.getInstancia();
@@ -89,7 +91,7 @@ public class BibliotecaApp extends JFrame {
         try {
             JTextField tituloField = new JTextField(20);
             JTextField isbnField = new JTextField(20);
-            JTextField volumenField = new JTextField(5);
+            JTextField volumenField = new JTextField(5); 
             JTextField editorialField = new JTextField(20);
             JTextField nombreAutorField = new JTextField(20);
             JTextField apellidoAutorField = new JTextField(20);
@@ -98,35 +100,77 @@ public class BibliotecaApp extends JFrame {
 
             JPanel inputPanel = new JPanel();
             inputPanel.setLayout(new GridLayout(12, 2));
-            inputPanel.add(new JLabel("Título del libro:"));
+            inputPanel.add(new JLabel("Título del libro (solo letras):"));
             inputPanel.add(tituloField);
-            inputPanel.add(new JLabel("ISBN del libro:"));
+            inputPanel.add(new JLabel("ISBN del libro (13 dígitos numéricos):"));
             inputPanel.add(isbnField);
-            inputPanel.add(new JLabel("Volumen del libro:"));
+            inputPanel.add(new JLabel("Volumen del libro (solo números):"));
             inputPanel.add(volumenField);
             inputPanel.add(new JLabel("Editorial del libro:"));
             inputPanel.add(editorialField);
-            inputPanel.add(new JLabel("Nombre del autor:"));
+            inputPanel.add(new JLabel("Nombre del autor (solo letras):"));
             inputPanel.add(nombreAutorField);
-            inputPanel.add(new JLabel("Apellido del autor:"));
+            inputPanel.add(new JLabel("Apellido del autor (solo letras):"));
             inputPanel.add(apellidoAutorField);
-            inputPanel.add(new JLabel("Biografía del autor:"));
+            inputPanel.add(new JLabel("Biografía del autor (solo letras o años numéricos, ejemplo: 1980):"));
             inputPanel.add(biografiaAutorField);
             inputPanel.add(new JLabel("Nombre de la sede:"));
             inputPanel.add(nombreSedeField);
-            inputPanel.add(new JLabel("Cantidad de copias:"));
+            inputPanel.add(new JLabel("Cantidad de copias (solo números):"));
             inputPanel.add(cantidadCopiasField);
 
             int result = JOptionPane.showConfirmDialog(null, inputPanel, "Agregar Libro", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
                 String titulo = tituloField.getText();
                 String isbn = isbnField.getText();
-                int volumen = Integer.parseInt(volumenField.getText());
+                String volumenText = volumenField.getText(); 
                 String editorial = editorialField.getText();
                 String nombreAutor = nombreAutorField.getText();
                 String apellidoAutor = apellidoAutorField.getText();
                 String biografiaAutor = biografiaAutorField.getText();
-                int cantidadCopias = Integer.parseInt(cantidadCopiasField.getText());
+                String cantidadCopiasText = cantidadCopiasField.getText();
+
+                // Validaciones
+                List<String> errores = new ArrayList<>();
+                
+                int cantidadCopias = 0;
+                int volumen = 0; 
+
+                if (!titulo.matches("^[A-Za-z\\s]+$")) {
+                    errores.add("El título debe contener solo letras.");
+                }
+
+                if (!isbn.matches("\\d{13}")) {
+                    errores.add("El ISBN debe contener 13 dígitos numéricos.");
+                }
+
+                if (!volumenText.matches("\\d+")) {
+                    errores.add("El volumen debe contener solo números.");
+                } else {
+                    volumen = Integer.parseInt(volumenText); 
+                }
+
+                if (!biografiaAutor.matches("^[A-Za-z\\s\\d\\-]+$")) {
+                    errores.add("La biografía del autor debe contener solo letras, números o rangos de años (ejemplo: 1970-2012).");
+                }
+
+                if (!cantidadCopiasText.matches("\\d+")) {
+                    errores.add("La cantidad de copias debe contener solo números.");
+                }
+
+                
+                if (titulo.isEmpty() || isbn.isEmpty() || volumenText.isEmpty() || editorial.isEmpty() || nombreAutor.isEmpty() || apellidoAutor.isEmpty() || biografiaAutor.isEmpty() || cantidadCopiasText.isEmpty()) {
+                    errores.add("Todos los campos deben ser diligenciados.");
+                }
+
+                if (!errores.isEmpty()) {
+                    String mensajeError = "Errores:\n";
+                    for (String error : errores) {
+                        mensajeError += "- " + error + "\n";
+                    }
+                    resultadoTextArea.setText(mensajeError);
+                    return;
+                }
 
                 Autor autor = new Autor(nombreAutor, apellidoAutor, biografiaAutor);
                 String nombreSede = nombreSedeField.getText();
@@ -141,11 +185,15 @@ public class BibliotecaApp extends JFrame {
                 }
             }
         } catch (NumberFormatException ex) {
-            resultadoTextArea.setText("Error: Ingresa valores numéricos válidos.");
+            resultadoTextArea.setText("Error: Deberás usar solo números en campos numéricos.");
         } catch (Exception ex) {
             resultadoTextArea.setText("Error inesperado: " + ex.getMessage());
         }
     }
+
+
+
+
 
     private void handleEliminarLibro() {
         try {
@@ -208,8 +256,7 @@ public class BibliotecaApp extends JFrame {
         }
     }
 
-    @SuppressWarnings("unused")
-	private void handleListarLibros() {
+    private void handleListarLibros() {
         try {
             String resultado = biblioteca.listarLibros();
             resultadoTextArea.setText(resultado);
