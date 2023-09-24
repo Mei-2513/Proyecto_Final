@@ -43,14 +43,18 @@ public class Biblioteca {
     }
 
     public boolean eliminarLibro(String ISBN, String nombreSede) {
+        if (!nombreSede.equals("Tunja") && !nombreSede.equals("Duitama")) {
+            throw new IllegalArgumentException("El nombre de la sede debe ser 'Tunja' o 'Duitama'.");
+        }
+
         Sede sede = getSede(nombreSede);
 
         if (sede != null) {
             if (sede.eliminarLibro(ISBN)) {
-                return true; 
+                return true;
             }
         }
-        return false; 
+        return false;
     }
 
     public Libro buscarLibro(String nombre, String ISBN, String nombreSede) {

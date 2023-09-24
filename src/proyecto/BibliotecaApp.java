@@ -173,7 +173,7 @@ public class BibliotecaApp extends JFrame {
                     errores.add("Todos los campos deben ser diligenciados.");
                 }
 
-                // Verificar si el nombre de la sede es válido
+                
                 String nombreSede = nombreSedeField.getText();
                 if (!nombreSede.equals("Tunja") && !nombreSede.equals("Duitama")) {
                     errores.add("Error: El nombre de la sede debe ser 'Tunja' o 'Duitama'.");
@@ -217,38 +217,38 @@ public class BibliotecaApp extends JFrame {
     private void handleEliminarLibro() {
         try {
             JTextField isbnField = new JTextField(20);
-            JTextField nombreSedeField = new JTextField(20); 
+            JTextField nombreSedeField = new JTextField(20);
 
             JPanel inputPanel = new JPanel();
-            inputPanel.setLayout(new GridLayout(2, 2));
-            inputPanel.add(new JLabel("ISBN del libro (13 dígitos numéricos):"));
+            inputPanel.setLayout(new GridLayout(4, 2));
+            inputPanel.add(new JLabel("ISBN del libro a eliminar:"));
             inputPanel.add(isbnField);
-            inputPanel.add(new JLabel("Nombre de la sede:")); 
+            inputPanel.add(new JLabel("Nombre de la sede (Tunja o Duitama):"));
             inputPanel.add(nombreSedeField);
 
             int result = JOptionPane.showConfirmDialog(null, inputPanel, "Eliminar Libro", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
-                String ISBN = isbnField.getText();
+                String isbn = isbnField.getText();
                 String nombreSede = nombreSedeField.getText();
 
-                
-                if (!ISBN.matches("\\d{13}")) {
-                    resultadoTextArea.setText("Error: El ISBN del libro debe contener 13 dígitos numéricos.");
+                if (!nombreSede.equals("Tunja") && !nombreSede.equals("Duitama")) {
+                    resultadoTextArea.setText("Error: El nombre de la sede debe ser 'Tunja' o 'Duitama'.");
                     return;
                 }
 
-                boolean eliminado = biblioteca.eliminarLibro(ISBN, nombreSede);
-                
+                boolean eliminado = biblioteca.eliminarLibro(isbn, nombreSede);
+
                 if (eliminado) {
-                    resultadoTextArea.setText("Libro eliminado con éxito.");
+                    resultadoTextArea.setText("Libro eliminado con éxito de la sede " + nombreSede + ".");
                 } else {
-                    resultadoTextArea.setText("El libro no existe en la sede especificada.");
+                    resultadoTextArea.setText("No se encontró ningún libro con el ISBN especificado en la sede " + nombreSede + ".");
                 }
             }
         } catch (Exception ex) {
-            resultadoTextArea.setText("Error: " + ex.getMessage());
+            resultadoTextArea.setText("Error inesperado: " + ex.getMessage());
         }
     }
+
 
 
 
@@ -259,7 +259,7 @@ public class BibliotecaApp extends JFrame {
 
             JPanel inputPanel = new JPanel();
             inputPanel.setLayout(new GridLayout(2, 2));
-            inputPanel.add(new JLabel("Nombre del libro:"));
+            inputPanel.add(new JLabel("Nombre del libro (solo letras):"));
             inputPanel.add(nombreLibroField);
             inputPanel.add(new JLabel("ISBN del libro (13 dígitos numéricos):"));
             inputPanel.add(isbnLibroField);
@@ -274,6 +274,7 @@ public class BibliotecaApp extends JFrame {
                     return;
                 }
 
+                
                 if (!nombreLibro.matches("^[A-Za-z\\s]+$")) {
                     resultadoTextArea.setText("Error: El nombre del libro debe contener solo letras y espacios.");
                     return;
@@ -284,33 +285,7 @@ public class BibliotecaApp extends JFrame {
                     return;
                 }
 
-                Object[] sedesArray = biblioteca.getSedes().keySet().toArray();
-                String selectedSede = (String) JOptionPane.showInputDialog(
-                    null,
-                    "Selecciona una sede:",
-                    "Seleccionar Sede",
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    sedesArray,
-                    null
-                );
-
-                if (selectedSede == null) {
-                    resultadoTextArea.setText("Operación cancelada por el usuario.");
-                    return;
-                }
-
-                sedeActual = biblioteca.getSede(selectedSede);
-
                 
-                Libro libroEncontrado = sedeActual.buscarLibro(nombreLibro, isbnLibro);
-
-                if (libroEncontrado != null) {
-                    
-                    resultadoTextArea.setText("Detalles del libro encontrado:\n" + libroEncontrado.toString());
-                } else {
-                    resultadoTextArea.setText("El libro no se encuentra en la sede actual.");
-                }
             }
         } catch (Exception ex) {
             resultadoTextArea.setText("Error: " + ex.getMessage());
