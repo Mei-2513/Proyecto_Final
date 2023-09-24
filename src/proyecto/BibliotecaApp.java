@@ -135,7 +135,7 @@ public class BibliotecaApp extends JFrame {
             inputPanel.add(nombreAutorField);
             inputPanel.add(new JLabel("Apellido del autor (Digita letras):"));
             inputPanel.add(apellidoAutorField);
-            inputPanel.add(new JLabel("Biografía del autor (Digita letras y espacios"));
+            inputPanel.add(new JLabel("Biografía del autor (Digita letras y espacios):"));
             inputPanel.add(biografiaAutorField);
             inputPanel.add(new JLabel("Cantidad de copias (Digita solo números):"));
             inputPanel.add(cantidadCopiasField);
