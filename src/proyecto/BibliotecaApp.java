@@ -234,19 +234,40 @@ public class BibliotecaApp extends JFrame {
         try {
             JTextField nombreLibroField = new JTextField(20);
             JTextField isbnLibroField = new JTextField(20);
+            JTextField nombreSedeField = new JTextField(20);
 
             JPanel inputPanel = new JPanel();
             inputPanel.setLayout(new GridLayout(3, 2));
             inputPanel.add(new JLabel("Nombre del libro:"));
             inputPanel.add(nombreLibroField);
-            inputPanel.add(new JLabel("ISBN del libro:"));
+            inputPanel.add(new JLabel("ISBN del libro (13 dígitos numéricos):"));
             inputPanel.add(isbnLibroField);
+            inputPanel.add(new JLabel("Nombre de la sede:"));
+            inputPanel.add(nombreSedeField);
 
             int result = JOptionPane.showConfirmDialog(null, inputPanel, "Buscar Libro", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
-                String nombreLibro = nombreLibroField.getText(); 
-                String isbnLibro = isbnLibroField.getText();       
+                String nombreLibro = nombreLibroField.getText();
+                String isbnLibro = isbnLibroField.getText();
                 String nombreSede = nombreSedeField.getText();
+
+                
+                if (nombreLibro.isEmpty() || isbnLibro.isEmpty() || nombreSede.isEmpty()) {
+                    resultadoTextArea.setText("Error: Todos los campos deben ser diligenciados.");
+                    return;
+                }
+
+                
+                if (!nombreLibro.matches("^[A-Za-z\\s]+$")) {
+                    resultadoTextArea.setText("Error: El nombre del libro debe contener solo letras y espacios.");
+                    return;
+                }
+
+               
+                if (!isbnLibro.matches("\\d{13}")) {
+                    resultadoTextArea.setText("Error: El ISBN del libro debe contener exactamente 13 dígitos numéricos.");
+                    return;
+                }
 
                 Libro libro = biblioteca.buscarLibro(nombreLibro, isbnLibro, nombreSede);
 
@@ -268,6 +289,7 @@ public class BibliotecaApp extends JFrame {
             resultadoTextArea.setText("Error: " + ex.getMessage());
         }
     }
+
 
     private void handleListarLibros() {
         try {
