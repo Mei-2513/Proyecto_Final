@@ -26,9 +26,12 @@ public class BibliotecaApp extends JFrame {
     private JButton listarLibrosEnAmbasSedesButton;
 
     public BibliotecaApp() {
-        setTitle("Biblioteca App");
+        setTitle("Biblioteca Virtual");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
+
+        JLabel bienvenidaLabel = new JLabel("¡Bienvenido a la Biblioteca Virtual!");
+        bienvenidaLabel.setHorizontalAlignment(JLabel.CENTER);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(7, 1));
@@ -41,11 +44,15 @@ public class BibliotecaApp extends JFrame {
         JButton listarSedesButton = new JButton("Listar Sedes");
         listarLibrosEnAmbasSedesButton = new JButton("Listar Libros en Ambas Sedes");
 
+        panel.add(bienvenidaLabel); // Agregar el mensaje de bienvenida
         panel.add(agregarLibroButton);
         panel.add(eliminarLibroButton);
         panel.add(buscarLibroButton);
         panel.add(listarSedesButton);    
         panel.add(listarLibrosEnAmbasSedesButton); 
+        
+        
+        
 
         agregarLibroButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -78,6 +85,14 @@ public class BibliotecaApp extends JFrame {
                 handleListarLibrosEnAmbasSedes();
             }
         }); 
+        JButton salirButton = new JButton("Salir");
+        panel.add(salirButton);
+
+        salirButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0); 
+            }
+        });
 
         resultadoTextArea = new JTextArea(10, 40);
         resultadoTextArea.setEditable(false);
