@@ -103,6 +103,7 @@ public class BibliotecaApp extends JFrame {
             JTextField apellidoAutorField = new JTextField(20);
             JTextField biografiaAutorField = new JTextField(20);
             JTextField cantidadCopiasField = new JTextField(5);
+            JTextField nombreSedeField = new JTextField(20);
 
             JPanel inputPanel = new JPanel();
             inputPanel.setLayout(new GridLayout(12, 2));
@@ -120,10 +121,10 @@ public class BibliotecaApp extends JFrame {
             inputPanel.add(apellidoAutorField);
             inputPanel.add(new JLabel("Biografía del autor (solo letras o años numéricos, ejemplo: 1980):"));
             inputPanel.add(biografiaAutorField);
-            inputPanel.add(new JLabel("Nombre de la sede:"));
-            inputPanel.add(nombreSedeField);
             inputPanel.add(new JLabel("Cantidad de copias (solo números):"));
             inputPanel.add(cantidadCopiasField);
+            inputPanel.add(new JLabel("Nombre de la sede (Tunja o Duitama):"));
+            inputPanel.add(nombreSedeField);
 
             int result = JOptionPane.showConfirmDialog(null, inputPanel, "Agregar Libro", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
@@ -135,6 +136,7 @@ public class BibliotecaApp extends JFrame {
                 String apellidoAutor = apellidoAutorField.getText();
                 String biografiaAutor = biografiaAutorField.getText();
                 String cantidadCopiasText = cantidadCopiasField.getText();
+                String nombreSede = nombreSedeField.getText();
 
                 List<String> errores = new ArrayList<>();
 
@@ -159,8 +161,16 @@ public class BibliotecaApp extends JFrame {
                     errores.add("La editorial debe contener solo letras y espacios.");
                 }
 
-                if (!biografiaAutor.matches("^[A-Za-z\\s\\d\\-]+$")) {
-                    errores.add("La biografía del autor debe contener solo letras, números o rangos de años (ejemplo: 1970-2012).");
+                if (!nombreAutor.matches("^[A-Za-z\\s]+$")) {
+                    errores.add("El autor debe contener solo letras y espacios.");
+                }
+
+                if (!apellidoAutor.matches("^[A-Za-z\\s]+$")) {
+                    errores.add("El apellido debe contener solo letras y espacios.");
+                }
+
+                if (!biografiaAutor.matches("^[A-Za-z\\s]+$")) {
+                    errores.add("La biografía del autor debe contener solo letras y espacios ");
                 }
 
                 if (!cantidadCopiasText.matches("\\d+")) {
@@ -169,22 +179,16 @@ public class BibliotecaApp extends JFrame {
                     cantidadCopias = Integer.parseInt(cantidadCopiasText);
                 }
 
-                if (titulo.isEmpty() || isbn.isEmpty() || volumenText.isEmpty() || editorial.isEmpty() || nombreAutor.isEmpty() || apellidoAutor.isEmpty() || biografiaAutor.isEmpty() || cantidadCopiasText.isEmpty()) {
+                if (titulo.isEmpty() || isbn.isEmpty() || volumenText.isEmpty() || editorial.isEmpty() || nombreAutor.isEmpty() || apellidoAutor.isEmpty() || cantidadCopiasText.isEmpty() || nombreSede.isEmpty()) {
                     errores.add("Todos los campos deben ser diligenciados.");
                 }
 
-                
-                String nombreSede = nombreSedeField.getText();
                 if (!nombreSede.equals("Tunja") && !nombreSede.equals("Duitama")) {
                     errores.add("Error: El nombre de la sede debe ser 'Tunja' o 'Duitama'.");
                 }
 
                 if (!errores.isEmpty()) {
-                    String mensajeError = "Errores:\n";
-                    for (String error : errores) {
-                        mensajeError += "- " + error + "\n";
-                    }
-                    resultadoTextArea.setText(mensajeError);
+                    resultadoTextArea.setText("Error: " + errores.get(0));
                     return;
                 }
 
@@ -214,6 +218,7 @@ public class BibliotecaApp extends JFrame {
 
 
 
+
     private void handleEliminarLibro() {
         try {
             JTextField isbnField = new JTextField(20);
@@ -221,7 +226,7 @@ public class BibliotecaApp extends JFrame {
 
             JPanel inputPanel = new JPanel();
             inputPanel.setLayout(new GridLayout(4, 2));
-            inputPanel.add(new JLabel("ISBN del libro a eliminar:"));
+            inputPanel.add(new JLabel("ISBN del libro a eliminar (13 dígitos numéricos):"));
             inputPanel.add(isbnField);
             inputPanel.add(new JLabel("Nombre de la sede (Tunja o Duitama):"));
             inputPanel.add(nombreSedeField);
@@ -230,6 +235,17 @@ public class BibliotecaApp extends JFrame {
             if (result == JOptionPane.OK_OPTION) {
                 String isbn = isbnField.getText();
                 String nombreSede = nombreSedeField.getText();
+                
+                
+                if (!isbn.matches("\\d{13}")) {
+                    resultadoTextArea.setText("Error: El ISBN del libro debe contener exactamente 13 dígitos numéricos.");
+                    return;
+                }
+
+                if (isbn.isEmpty() || nombreSede.isEmpty()) {
+                    resultadoTextArea.setText("Error: Todos los campos deben ser diligenciados.");
+                    return;
+                }         
 
                 if (!nombreSede.equals("Tunja") && !nombreSede.equals("Duitama")) {
                     resultadoTextArea.setText("Error: El nombre de la sede debe ser 'Tunja' o 'Duitama'.");
@@ -244,10 +260,12 @@ public class BibliotecaApp extends JFrame {
                     resultadoTextArea.setText("No se encontró ningún libro con el ISBN especificado en la sede " + nombreSede + ".");
                 }
             }
+
         } catch (Exception ex) {
             resultadoTextArea.setText("Error inesperado: " + ex.getMessage());
         }
     }
+
 
 
 
@@ -267,25 +285,23 @@ public class BibliotecaApp extends JFrame {
             int result = JOptionPane.showConfirmDialog(null, inputPanel, "Buscar Libro", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
                 String nombreLibro = nombreLibroField.getText();
-                String isbnLibro = isbnLibroField.getText();
-
+                String isbnLibro = isbnLibroField.getText();      
+                
+                if (!nombreLibro.matches("^[A-Za-z\\s]+$")) {
+                    resultadoTextArea.setText("Error: El nombre del libro debe contener solo letras y espacios.");
+                    return; 
+                }
                 if (nombreLibro.isEmpty() || isbnLibro.isEmpty()) {
                     resultadoTextArea.setText("Error: Todos los campos deben ser diligenciados.");
                     return;
                 }
 
-                
-                if (!nombreLibro.matches("^[A-Za-z\\s]+$")) {
-                    resultadoTextArea.setText("Error: El nombre del libro debe contener solo letras y espacios.");
-                    return;
-                }
 
                 if (!isbnLibro.matches("\\d{13}")) {
                     resultadoTextArea.setText("Error: El ISBN del libro debe contener exactamente 13 dígitos numéricos.");
-                    return;
+                    return; 
                 }
-
-                
+               
             }
         } catch (Exception ex) {
             resultadoTextArea.setText("Error: " + ex.getMessage());
