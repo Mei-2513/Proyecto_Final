@@ -44,7 +44,7 @@ public class BibliotecaApp extends JFrame {
         JButton listarSedesButton = new JButton("Listar Sedes");
         listarLibrosEnAmbasSedesButton = new JButton("Listar Libros en Ambas Sedes");
 
-        panel.add(bienvenidaLabel); // Agregar el mensaje de bienvenida
+        panel.add(bienvenidaLabel); 
         panel.add(agregarLibroButton);
         panel.add(eliminarLibroButton);
         panel.add(buscarLibroButton);
@@ -122,23 +122,23 @@ public class BibliotecaApp extends JFrame {
 
             JPanel inputPanel = new JPanel();
             inputPanel.setLayout(new GridLayout(12, 2));
-            inputPanel.add(new JLabel("Título del libro (solo letras):"));
+            inputPanel.add(new JLabel("Título del libro (Digita letras):"));
             inputPanel.add(tituloField);
-            inputPanel.add(new JLabel("ISBN del libro (13 dígitos numéricos):"));
+            inputPanel.add(new JLabel("ISBN del libro (Digita 13 dígitos numéricos):"));
             inputPanel.add(isbnField);
-            inputPanel.add(new JLabel("Volumen del libro (solo números):"));
+            inputPanel.add(new JLabel("Volumen del libro (Digita números):"));
             inputPanel.add(volumenField);
             inputPanel.add(new JLabel("Editorial del libro:"));
             inputPanel.add(editorialField);
-            inputPanel.add(new JLabel("Nombre del autor (solo letras):"));
+            inputPanel.add(new JLabel("Nombre del autor (Digita letras):"));
             inputPanel.add(nombreAutorField);
-            inputPanel.add(new JLabel("Apellido del autor (solo letras):"));
+            inputPanel.add(new JLabel("Apellido del autor (Digita letras):"));
             inputPanel.add(apellidoAutorField);
-            inputPanel.add(new JLabel("Biografía del autor (solo letras o años numéricos, ejemplo: 1980):"));
+            inputPanel.add(new JLabel("Biografía del autor (Digita letras y espacios"));
             inputPanel.add(biografiaAutorField);
-            inputPanel.add(new JLabel("Cantidad de copias (solo números):"));
+            inputPanel.add(new JLabel("Cantidad de copias (Digita solo números):"));
             inputPanel.add(cantidadCopiasField);
-            inputPanel.add(new JLabel("Nombre de la sede (Tunja o Duitama):"));
+            inputPanel.add(new JLabel("Nombre de la sede (Digita Tunja o Duitama):"));
             inputPanel.add(nombreSedeField);
 
             int result = JOptionPane.showConfirmDialog(null, inputPanel, "Agregar Libro", JOptionPane.OK_CANCEL_OPTION);
