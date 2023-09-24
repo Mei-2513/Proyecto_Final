@@ -40,14 +40,17 @@ public Sede(String nombre, String campus) {
         arbolLibrosSede.insertar(libro);
     }
 
-    public void eliminarLibro(String ISBN) {
+    public boolean eliminarLibro(String ISBN) {
         Libro libro = libros.get(ISBN);
 
         if (libro != null) {
             libros.remove(ISBN);
-            arbolLibrosSede.eliminar(ISBN); 
+            arbolLibrosSede.eliminar(ISBN);
+            return true; 
         }
+        return false; 
     }
+
     public Libro buscarLibro(String nombre, String ISBN) {
         for (Libro libro : libros.values()) {
             if (libro.getTitulo().equals(nombre) && libro.getISBN().equals(ISBN)) {

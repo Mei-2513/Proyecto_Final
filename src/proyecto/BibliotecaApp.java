@@ -192,30 +192,43 @@ public class BibliotecaApp extends JFrame {
     }
 
 
-
-
-
     private void handleEliminarLibro() {
         try {
             JTextField isbnField = new JTextField(20);
+            JTextField nombreSedeField = new JTextField(20); 
 
             JPanel inputPanel = new JPanel();
-            inputPanel.setLayout(new GridLayout(1, 2));
-            inputPanel.add(new JLabel("ISBN del libro:"));
+            inputPanel.setLayout(new GridLayout(2, 2));
+            inputPanel.add(new JLabel("ISBN del libro (13 dígitos numéricos):"));
             inputPanel.add(isbnField);
+            inputPanel.add(new JLabel("Nombre de la sede:")); 
+            inputPanel.add(nombreSedeField);
 
             int result = JOptionPane.showConfirmDialog(null, inputPanel, "Eliminar Libro", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
                 String ISBN = isbnField.getText();
                 String nombreSede = nombreSedeField.getText();
 
-                biblioteca.eliminarLibro(ISBN, nombreSede);
-                resultadoTextArea.setText("Libro eliminado con éxito.");
+                
+                if (!ISBN.matches("\\d{13}")) {
+                    resultadoTextArea.setText("Error: El ISBN del libro debe contener 13 dígitos numéricos.");
+                    return;
+                }
+
+                boolean eliminado = biblioteca.eliminarLibro(ISBN, nombreSede);
+                
+                if (eliminado) {
+                    resultadoTextArea.setText("Libro eliminado con éxito.");
+                } else {
+                    resultadoTextArea.setText("El libro no existe en la sede especificada.");
+                }
             }
         } catch (Exception ex) {
             resultadoTextArea.setText("Error: " + ex.getMessage());
         }
     }
+
+
 
     private void handleBuscarLibro() {
         try {

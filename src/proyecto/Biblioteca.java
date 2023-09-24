@@ -36,14 +36,15 @@ public class Biblioteca {
         }
     }
 
-    public void eliminarLibro(String ISBN, String nombreSede) {
+    public boolean eliminarLibro(String ISBN, String nombreSede) {
         Sede sede = getSede(nombreSede);
 
         if (sede != null) {
-            sede.eliminarLibro(ISBN);
-        } else {
-            throw new IllegalArgumentException("La sede especificada no existe.");
+            if (sede.eliminarLibro(ISBN)) {
+                return true; 
+            }
         }
+        return false; 
     }
 
     public Libro buscarLibro(String nombre, String ISBN, String nombreSede) {
@@ -64,6 +65,8 @@ public class Biblioteca {
         }
         return sb.toString();
     }
+   
+
 
     public String listarSedes() {
         StringBuilder sb = new StringBuilder();
