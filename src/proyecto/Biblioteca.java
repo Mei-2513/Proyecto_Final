@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Biblioteca {
-    private AVLTree arbolLibros = new AVLTree();
     private Map<String, Sede> sedes = new HashMap<>();
 
     private static Biblioteca instancia = new Biblioteca();
@@ -27,42 +26,42 @@ public class Biblioteca {
     }
 
     public void agregarLibro(Libro libro) {
-        arbolLibros.insertar(libro);
-        Sede sede = libro.getSede();
-        sede.agregarLibro(libro);
+        String nombreSede = libro.getSede().getNombre();
+        Sede sede = getSede(nombreSede);
+
+        if (sede != null) {
+            sede.agregarLibro(libro);
+        } else {
+            throw new IllegalArgumentException("La sede especificada no existe.");
+        }
     }
 
     public void eliminarLibro(String ISBN, String nombreSede) {
-        Sede sede = sedes.get(nombreSede);
+        Sede sede = getSede(nombreSede);
 
         if (sede != null) {
-            Libro libro = arbolLibros.buscar("", ISBN);
-            if (libro != null) {
-                arbolLibros.eliminar(ISBN);
-                sede.eliminarLibro(libro);
-            } else {
-                System.out.println("El libro con ISBN " + ISBN + " no existe.");
-            }
+            sede.eliminarLibro(ISBN);
         } else {
-            System.out.println("La sede especificada no existe.");
+            throw new IllegalArgumentException("La sede especificada no existe.");
         }
     }
 
     public Libro buscarLibro(String nombre, String ISBN, String nombreSede) {
-        Sede sede = sedes.get(nombreSede);
+        Sede sede = getSede(nombreSede);
 
         if (sede != null) {
-            return arbolLibros.buscar(nombre, ISBN);
+            return sede.buscarLibro(nombre, ISBN);
         } else {
-            System.out.println("La sede especificada no existe.");
-            return null;
+            throw new IllegalArgumentException("La sede especificada no existe.");
         }
     }
 
     public String listarLibros() {
         StringBuilder sb = new StringBuilder();
         sb.append("Listado de todos los libros en todas las sedes:\n");
-        sb.append(arbolLibros.inOrderTraversal());
+        for (Sede sede : sedes.values()) {
+            sb.append(sede.listarLibros());
+        }
         return sb.toString();
     }
 
@@ -76,13 +75,11 @@ public class Biblioteca {
     }
 
     public String listarLibrosEnSede(String nombreSede) {
-        Sede sede = sedes.get(nombreSede);
+        Sede sede = getSede(nombreSede);
         if (sede != null) {
-            StringBuilder resultado = new StringBuilder("Listado de libros en la sede " + nombreSede + ":\n");
-            resultado.append(sede.listarLibros());
-            return resultado.toString();
+            return sede.listarLibros();
         } else {
-            return "La sede especificada no existe.";
+            throw new IllegalArgumentException("La sede especificada no existe.");
         }
     }
 }
