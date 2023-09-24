@@ -1,6 +1,7 @@
 package proyecto;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,16 +27,24 @@ public class BibliotecaApp extends JFrame {
     private Sede sedeActual;
     private JButton listarLibrosEnAmbasSedesButton;
 
+
     public BibliotecaApp() {
         setTitle("Biblioteca Virtual");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
+
+        
+        getContentPane().setBackground(new Color(255, 182, 193));
 
         JLabel bienvenidaLabel = new JLabel("¡Bienvenido a la Biblioteca Virtual!");
         bienvenidaLabel.setHorizontalAlignment(JLabel.CENTER);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(7, 1));
+
+        
+        panel.setBackground(new Color(255, 182, 193));
+
         resultadoTextArea = new JTextArea(10, 40);
         resultadoTextArea.setEditable(false);
 
@@ -102,6 +111,8 @@ public class BibliotecaApp extends JFrame {
 
         add(panel, BorderLayout.WEST);
         add(scrollPane, BorderLayout.CENTER);
+        
+       
 
         pack();
         setLocationRelativeTo(null);
