@@ -41,6 +41,7 @@ public class BibliotecaApp extends JFrame {
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(7, 1));
+        
 
         
         panel.setBackground(new Color(255, 182, 193));
@@ -53,6 +54,14 @@ public class BibliotecaApp extends JFrame {
         JButton buscarLibroButton = new JButton("Buscar Libro");
         JButton listarSedesButton = new JButton("Listar Sedes");
         listarLibrosEnAmbasSedesButton = new JButton("Listar Libros en Ambas Sedes");
+        
+        
+        agregarLibroButton.setBackground(Color.LIGHT_GRAY); 
+        eliminarLibroButton.setBackground(Color.LIGHT_GRAY);  
+        buscarLibroButton.setBackground(Color.LIGHT_GRAY);
+        listarSedesButton.setBackground(Color.LIGHT_GRAY);
+        listarLibrosEnAmbasSedesButton.setBackground(Color.LIGHT_GRAY);
+        
 
         panel.add(bienvenidaLabel); 
         panel.add(agregarLibroButton);
