@@ -105,6 +105,8 @@ public class BibliotecaApp extends JFrame {
             }
         }); 
         JButton salirButton = new JButton("Salir");
+        
+        salirButton.setBackground(Color.LIGHT_GRAY); 
         panel.add(salirButton);
 
         salirButton.addActionListener(new ActionListener() {
