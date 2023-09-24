@@ -7,18 +7,31 @@ import java.awt.event.ActionListener;
 
 public class BibliotecaApp extends JFrame {
 
-    private Biblioteca biblioteca = new Biblioteca();
+    private Biblioteca biblioteca = Biblioteca.getInstancia();
+    private JTextArea resultadoTextArea;
+    private JTextField nombreSedeField = new JTextField(20);
 
     public BibliotecaApp() {
         setTitle("Biblioteca App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
+        setSize(600, 400);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(6, 1));
 
         JButton agregarLibroButton = new JButton("Agregar Libro");
         JButton eliminarLibroButton = new JButton("Eliminar Libro");
         JButton buscarLibroButton = new JButton("Buscar Libro");
         JButton listarLibrosButton = new JButton("Listar Libros");
+        JButton listarSedesButton = new JButton("Listar Sedes");
         JButton listarLibrosEnSedeButton = new JButton("Listar Libros en Sede");
+
+        panel.add(agregarLibroButton);
+        panel.add(eliminarLibroButton);
+        panel.add(buscarLibroButton);
+        panel.add(listarLibrosButton);
+        panel.add(listarSedesButton);
+        panel.add(listarLibrosEnSedeButton);
 
         agregarLibroButton.addActionListener(new ActionListener() {
             @Override
@@ -31,11 +44,13 @@ public class BibliotecaApp extends JFrame {
                     JTextField nombreAutorField = new JTextField(20);
                     JTextField apellidoAutorField = new JTextField(20);
                     JTextField biografiaAutorField = new JTextField(20);
-                    JTextField nombreSedeField = new JTextField(20);
+
+                    JTextField nombreSedeField = new JTextField(20); 
+
                     JTextField cantidadCopiasField = new JTextField(5);
 
                     JPanel inputPanel = new JPanel();
-                    inputPanel.setLayout(new GridLayout(9, 2));
+                    inputPanel.setLayout(new GridLayout(12, 2)); 
                     inputPanel.add(new JLabel("Título del libro:"));
                     inputPanel.add(tituloField);
                     inputPanel.add(new JLabel("ISBN del libro:"));
@@ -51,7 +66,7 @@ public class BibliotecaApp extends JFrame {
                     inputPanel.add(new JLabel("Biografía del autor:"));
                     inputPanel.add(biografiaAutorField);
                     inputPanel.add(new JLabel("Nombre de la sede:"));
-                    inputPanel.add(nombreSedeField);
+                    inputPanel.add(nombreSedeField); // Campo para ingresar el nombre de la sede
                     inputPanel.add(new JLabel("Cantidad de copias:"));
                     inputPanel.add(cantidadCopiasField);
 
@@ -65,27 +80,24 @@ public class BibliotecaApp extends JFrame {
                         String nombreAutor = nombreAutorField.getText();
                         String apellidoAutor = apellidoAutorField.getText();
                         String biografiaAutor = biografiaAutorField.getText();
-                        String nombreSede = nombreSedeField.getText();
                         int cantidadCopias = Integer.parseInt(cantidadCopiasField.getText());
 
                         Autor autor = new Autor(nombreAutor, apellidoAutor, biografiaAutor);
+                        String nombreSede = nombreSedeField.getText();
                         Sede sede = biblioteca.getSede(nombreSede);
 
                         if (sede != null) {
                             Libro libro = new Libro(titulo, isbn, volumen, editorial, autor, sede, cantidadCopias);
                             biblioteca.agregarLibro(libro);
-                            JOptionPane.showMessageDialog(null, "Libro agregado con éxito.");
+                            resultadoTextArea.setText("Libro agregado con éxito.");
                         } else {
-                            JOptionPane.showMessageDialog(null, "La sede especificada no existe.",
-                                    "Error", JOptionPane.ERROR_MESSAGE);
+                            resultadoTextArea.setText("La sede especificada no existe.");
                         }
                     }
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Error: Ingresa valores numéricos válidos.", "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    resultadoTextArea.setText("Error: Ingresa valores numéricos válidos.");
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error inesperado: " + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    resultadoTextArea.setText("Error inesperado: " + ex.getMessage());
                 }
             }
         });
@@ -94,21 +106,27 @@ public class BibliotecaApp extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String ISBN = JOptionPane.showInputDialog("Ingrese el ISBN del libro a eliminar:");
-                    String nombreSede = JOptionPane.showInputDialog("Ingrese el nombre de la sede:");
+                    JTextField isbnField = new JTextField(20);
+                    JTextField nombreSedeField = new JTextField(20);
 
-                    Sede sede = biblioteca.getSede(nombreSede);
+                    JPanel inputPanel = new JPanel();
+                    inputPanel.setLayout(new GridLayout(2, 2));
+                    inputPanel.add(new JLabel("ISBN del libro:"));
+                    inputPanel.add(isbnField);
+                    inputPanel.add(new JLabel("Nombre de la sede:"));
+                    inputPanel.add(nombreSedeField);
 
-                    if (sede != null) {
+                    int result = JOptionPane.showConfirmDialog(null, inputPanel, "Eliminar Libro",
+                            JOptionPane.OK_CANCEL_OPTION);
+                    if (result == JOptionPane.OK_OPTION) {
+                        String ISBN = isbnField.getText();
+                        String nombreSede = nombreSedeField.getText();
+
                         biblioteca.eliminarLibro(ISBN, nombreSede);
-                        JOptionPane.showMessageDialog(null, "Libro eliminado con éxito.");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "La sede especificada no existe.", "Error",
-                                JOptionPane.ERROR_MESSAGE);
+                        resultadoTextArea.setText("Libro eliminado con éxito.");
                     }
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    resultadoTextArea.setText("Error: " + ex.getMessage());
                 }
             }
         });
@@ -117,39 +135,44 @@ public class BibliotecaApp extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String nombre = JOptionPane.showInputDialog("Ingrese el nombre del libro (deje en blanco si no es relevante):");
-                    String ISBN = JOptionPane.showInputDialog("Ingrese el ISBN del libro (deje en blanco si no es relevante):");
-                    String nombreSede = JOptionPane.showInputDialog("Ingrese el nombre de la sede (deje en blanco si no es relevante):");
+                    JTextField nombreLibroField = new JTextField(20);
+                    JTextField isbnLibroField = new JTextField(20);
+                    JTextField nombreSedeField = new JTextField(20);
 
-                    if (nombre == null) nombre = "";
-                    if (ISBN == null) ISBN = "";
+                    JPanel inputPanel = new JPanel();
+                    inputPanel.setLayout(new GridLayout(3, 2));
+                    inputPanel.add(new JLabel("Nombre del libro:"));
+                    inputPanel.add(nombreLibroField);
+                    inputPanel.add(new JLabel("ISBN del libro:"));
+                    inputPanel.add(isbnLibroField);
+                    inputPanel.add(new JLabel("Nombre de la sede:"));
+                    inputPanel.add(nombreSedeField);
 
-                    Sede sede = biblioteca.getSede(nombreSede);
+                    int result = JOptionPane.showConfirmDialog(null, inputPanel, "Buscar Libro",
+                            JOptionPane.OK_CANCEL_OPTION);
+                    if (result == JOptionPane.OK_OPTION) {
+                        String nombreLibro = nombreLibroField.getText();
+                        String isbnLibro = isbnLibroField.getText();
+                        String nombreSede = nombreSedeField.getText();
 
-                    if (sede != null) {
-                        Libro libro = biblioteca.buscarLibro(nombre, ISBN, nombreSede);
+                        Libro libro = biblioteca.buscarLibro(nombreLibro, isbnLibro, nombreSede);
 
                         if (libro != null) {
-                            JOptionPane.showMessageDialog(null, "Información del libro:\n" +
-                                    "Título: " + libro.titulo + "\n" +
-                                    "ISBN: " + libro.ISBN + "\n" +
-                                    "Volumen: " + libro.volumen + "\n" +
-                                    "Editorial: " + libro.editorial + "\n" +
-                                    "Nombre del Autor: " + libro.autor.nombre + "\n" +
-                                    "Apellido del Autor: " + libro.autor.apelliddo + "\n" +
-                                    "Biografía del Autor: " + libro.autor.biografia + "\n" +
-                                    "Cantidad de Copias Disponibles: " + libro.cantidadCopias);
+                            resultadoTextArea.setText("Información del libro:\n" +
+                                    "Título: " + libro.getTitulo() + "\n" +
+                                    "ISBN: " + libro.getISBN() + "\n" +
+                                    "Volumen: " + libro.getVolumen() + "\n" +
+                                    "Editorial: " + libro.getEditorial() + "\n" +
+                                    "Nombre del Autor: " + libro.getAutor().getNombre() + "\n" +
+                                    "Apellido del Autor: " + libro.getAutor().getApellido() + "\n" +
+                                    "Biografía del Autor: " + libro.getAutor().getBiografia() + "\n" +
+                                    "Cantidad de Copias Disponibles: " + libro.getCantidadCopias());
                         } else {
-                            JOptionPane.showMessageDialog(null, "El libro no se encuentra en la sede especificada.", "Información",
-                                    JOptionPane.INFORMATION_MESSAGE);
+                            resultadoTextArea.setText("El libro no se encuentra en la sede especificada.");
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "La sede especificada no existe.", "Error",
-                                JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    resultadoTextArea.setText("Error: " + ex.getMessage());
                 }
             }
         });
@@ -158,11 +181,22 @@ public class BibliotecaApp extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    JOptionPane.showMessageDialog(null, "Listado de todos los libros en todas las sedes:\n");
-                    biblioteca.listarLibros();
+                    String resultado = biblioteca.listarLibros();
+                    resultadoTextArea.setText(resultado);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    resultadoTextArea.setText("Error: " + ex.getMessage());
+                }
+            }
+        });
+
+        listarSedesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String resultado = biblioteca.listarSedes();
+                    resultadoTextArea.setText(resultado);
+                } catch (Exception ex) {
+                    resultadoTextArea.setText("Error: " + ex.getMessage());
                 }
             }
         });
@@ -171,37 +205,25 @@ public class BibliotecaApp extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String nombreSede = JOptionPane.showInputDialog("Ingrese el nombre de la sede:");
-
-                    if (nombreSede != null && nombreSede.matches("[a-zA-Z]+")) {
-                        Sede sede = biblioteca.getSede(nombreSede);
-                        if (sede != null) {
-                            JOptionPane.showMessageDialog(null, "Listado de libros en la sede " + nombreSede + ":\n");
-                            biblioteca.listarLibrosEnSede(nombreSede);
-                        } else {
-                            JOptionPane.showMessageDialog(null, "La sede especificada no existe.", "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Nombre de sede inválido. Ingrese solo letras.", "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
+                    String nombreSede = nombreSedeField.getText();
+                    String resultado = biblioteca.listarLibrosEnSede(nombreSede);
+                    resultadoTextArea.setText(resultado);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    resultadoTextArea.setText("Error: " + ex.getMessage());
                 }
             }
         });
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(1, 1));
-        panel.add(agregarLibroButton);
-        panel.add(eliminarLibroButton);
-        panel.add(buscarLibroButton);
-        panel.add(listarLibrosButton);
-        panel.add(listarLibrosEnSedeButton);
+        resultadoTextArea = new JTextArea(10, 40);
+        resultadoTextArea.setEditable(false);
 
-        getContentPane().add(panel);
+        JScrollPane scrollPane = new JScrollPane(resultadoTextArea);
+
+        add(panel, BorderLayout.WEST);
+        add(scrollPane, BorderLayout.CENTER);
+
+        pack();
+        setLocationRelativeTo(null);
 
         setVisible(true);
     }
@@ -215,4 +237,3 @@ public class BibliotecaApp extends JFrame {
         });
     }
 }
-

@@ -17,8 +17,78 @@ public class Libro {
 	    this.volumen = volumen;
 	    this.editorial = editorial;
 	    this.autor = autor;
-	    this.sede = sede; // Ahora acepta una instancia de Sede
+	    this.sede = sede; 
 	    this.cantidadCopias = cantidadCopias;
+	}
+
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+
+	public String getISBN() {
+		return ISBN;
+	}
+
+
+	public void setISBN(String iSBN) {
+		ISBN = iSBN;
+	}
+
+
+	public int getVolumen() {
+		return volumen;
+	}
+
+
+	public void setVolumen(int volumen) {
+		this.volumen = volumen;
+	}
+
+
+	public String getEditorial() {
+		return editorial;
+	}
+
+
+	public void setEditorial(String editorial) {
+		this.editorial = editorial;
+	}
+
+
+	public Autor getAutor() {
+		return autor;
+	}
+
+
+	public void setAutor(Autor autor) {
+		this.autor = autor;
+	}
+
+
+	public Sede getSede() {
+		return sede;
+	}
+
+
+	public void setSede(Sede sede) {
+		this.sede = sede;
+	}
+
+
+	public int getCantidadCopias() {
+		return cantidadCopias;
+	}
+
+
+	public void setCantidadCopias(int cantidadCopias) {
+		this.cantidadCopias = cantidadCopias;
 	}
 
 

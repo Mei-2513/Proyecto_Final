@@ -186,15 +186,17 @@ public class AVLTree {
 	    }
 
 	   
-	    public void inOrderTraversal() {
-	        inOrderTraversal(raiz);
+	    public String inOrderTraversal() {
+	        StringBuilder sb = new StringBuilder();
+	        inOrderTraversal(raiz, sb);
+	        return sb.toString();
 	    }
 
-	    private void inOrderTraversal(AVLNode nodo) {
+	    private void inOrderTraversal(AVLNode nodo, StringBuilder sb) {
 	        if (nodo != null) {
-	            inOrderTraversal(nodo.izquierdo);
-	            System.out.println("Título: " + nodo.libro.titulo);
-	            inOrderTraversal(nodo.derecho);
+	            inOrderTraversal(nodo.izquierdo, sb);
+	            sb.append("Título: ").append(nodo.libro.getTitulo()).append("\n");
+	            inOrderTraversal(nodo.derecho, sb);
 	        }
 	    }
 }

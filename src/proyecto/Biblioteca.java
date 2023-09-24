@@ -7,21 +7,28 @@ public class Biblioteca {
     private AVLTree arbolLibros = new AVLTree();
     private Map<String, Sede> sedes = new HashMap<>();
 
-    public Biblioteca() {
+    private static Biblioteca instancia = new Biblioteca();
+
+    private Biblioteca() {
         sedes.put("Tunja", new Sede("Tunja", "Campus Facultad Medicina"));
         sedes.put("Duitama", new Sede("Duitama", "Centro Regional"));
     }
+
+    public static Biblioteca getInstancia() {
+        return instancia;
+    }
+
     public Sede getSede(String nombreSede) {
         return sedes.get(nombreSede);
     }
 
     public void agregarSede(String nombre, String campus) {
-        sedes.put(campus, new Sede(nombre, campus));
+        sedes.put(nombre, new Sede(nombre, campus));
     }
 
     public void agregarLibro(Libro libro) {
         arbolLibros.insertar(libro);
-        Sede sede = libro.sede;
+        Sede sede = libro.getSede();
         sede.agregarLibro(libro);
     }
 
@@ -52,17 +59,31 @@ public class Biblioteca {
         }
     }
 
-    public void listarLibros() {
-        arbolLibros.inOrderTraversal();
+    public String listarLibros() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Listado de todos los libros en todas las sedes:\n");
+        sb.append(arbolLibros.inOrderTraversal());
+        return sb.toString();
     }
 
-    public void listarLibrosEnSede(String nombreSede) {
-        Sede sede = sedes.get(nombreSede);
+    public String listarSedes() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Listado de todas las sedes:\n");
+        for (Sede sede : sedes.values()) {
+            sb.append("Nombre: ").append(sede.getNombre()).append(", Campus: ").append(sede.getCampus()).append("\n");
+        }
+        return sb.toString();
+    }
 
+    public String listarLibrosEnSede(String nombreSede) {
+        Sede sede = sedes.get(nombreSede);
         if (sede != null) {
-            sede.listarLibros();
+            StringBuilder resultado = new StringBuilder("Listado de libros en la sede " + nombreSede + ":\n");
+            resultado.append(sede.listarLibros());
+            return resultado.toString();
         } else {
-            System.out.println("La sede especificada no existe.");
+            return "La sede especificada no existe.";
         }
     }
 }
+
