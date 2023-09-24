@@ -91,7 +91,7 @@ public class BibliotecaApp extends JFrame {
         try {
             JTextField tituloField = new JTextField(20);
             JTextField isbnField = new JTextField(20);
-            JTextField volumenField = new JTextField(5); 
+            JTextField volumenField = new JTextField(5);
             JTextField editorialField = new JTextField(20);
             JTextField nombreAutorField = new JTextField(20);
             JTextField apellidoAutorField = new JTextField(20);
@@ -123,7 +123,7 @@ public class BibliotecaApp extends JFrame {
             if (result == JOptionPane.OK_OPTION) {
                 String titulo = tituloField.getText();
                 String isbn = isbnField.getText();
-                String volumenText = volumenField.getText(); 
+                String volumenText = volumenField.getText();
                 String editorial = editorialField.getText();
                 String nombreAutor = nombreAutorField.getText();
                 String apellidoAutor = apellidoAutorField.getText();
@@ -132,9 +132,9 @@ public class BibliotecaApp extends JFrame {
 
                 // Validaciones
                 List<String> errores = new ArrayList<>();
-                
+
                 int cantidadCopias = 0;
-                int volumen = 0; 
+                int volumen = 0;
 
                 if (!titulo.matches("^[A-Za-z\\s]+$")) {
                     errores.add("El título debe contener solo letras.");
@@ -147,7 +147,7 @@ public class BibliotecaApp extends JFrame {
                 if (!volumenText.matches("\\d+")) {
                     errores.add("El volumen debe contener solo números.");
                 } else {
-                    volumen = Integer.parseInt(volumenText); 
+                    volumen = Integer.parseInt(volumenText);
                 }
 
                 if (!biografiaAutor.matches("^[A-Za-z\\s\\d\\-]+$")) {
@@ -156,9 +156,10 @@ public class BibliotecaApp extends JFrame {
 
                 if (!cantidadCopiasText.matches("\\d+")) {
                     errores.add("La cantidad de copias debe contener solo números.");
+                } else {
+                    cantidadCopias = Integer.parseInt(cantidadCopiasText);
                 }
 
-                
                 if (titulo.isEmpty() || isbn.isEmpty() || volumenText.isEmpty() || editorial.isEmpty() || nombreAutor.isEmpty() || apellidoAutor.isEmpty() || biografiaAutor.isEmpty() || cantidadCopiasText.isEmpty()) {
                     errores.add("Todos los campos deben ser diligenciados.");
                 }
@@ -190,6 +191,7 @@ public class BibliotecaApp extends JFrame {
             resultadoTextArea.setText("Error inesperado: " + ex.getMessage());
         }
     }
+
 
 
     private void handleEliminarLibro() {
