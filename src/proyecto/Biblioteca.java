@@ -7,13 +7,17 @@ import java.util.Map;
 
 public class Biblioteca {
     private Map<String, Sede> sedes = new HashMap<>();
-
+    private List<Libro> libros;
     private static Biblioteca instancia = new Biblioteca();
 
     private Biblioteca() {
         sedes.put("Tunja", new Sede("Tunja", "Campus Facultad Medicina"));
         sedes.put("Duitama", new Sede("Duitama", "Centro Regional"));
     }
+    public List<Libro> getLibros() {
+        return libros;
+    }
+    
     public Map<String, Sede> getSedes() {
         return sedes;
     }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -291,37 +292,61 @@ public class BibliotecaApp extends JFrame {
             JTextField isbnLibroField = new JTextField(20);
 
             JPanel inputPanel = new JPanel();
-            inputPanel.setLayout(new GridLayout(2, 2));
+            inputPanel.setLayout(new GridLayout(3, 2));
             inputPanel.add(new JLabel("Nombre del libro (solo letras):"));
             inputPanel.add(nombreLibroField);
             inputPanel.add(new JLabel("ISBN del libro (13 dígitos numéricos):"));
             inputPanel.add(isbnLibroField);
 
+            String[] sedes = { "Tunja", "Duitama" };
+            JComboBox<String> sedeComboBox = new JComboBox<>(sedes);
+            inputPanel.add(new JLabel("Seleccione la sede:"));
+            inputPanel.add(sedeComboBox);
+
             int result = JOptionPane.showConfirmDialog(null, inputPanel, "Buscar Libro", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
-                String nombreLibro = nombreLibroField.getText();
-                String isbnLibro = isbnLibroField.getText();      
-                
-                if (!nombreLibro.matches("^[A-Za-z\\s]+$")) {
-                    resultadoTextArea.setText("Error: El nombre del libro debe contener solo letras y espacios.");
-                    return; 
-                }
+                String nombreLibro = nombreLibroField.getText().trim();
+                String isbnLibro = isbnLibroField.getText().trim();
+                String selectedSede = (String) sedeComboBox.getSelectedItem();
+
                 if (nombreLibro.isEmpty() || isbnLibro.isEmpty()) {
                     resultadoTextArea.setText("Error: Todos los campos deben ser diligenciados.");
                     return;
                 }
 
-
-                if (!isbnLibro.matches("\\d{13}")) {
-                    resultadoTextArea.setText("Error: El ISBN del libro debe contener exactamente 13 dígitos numéricos.");
-                    return; 
+                Sede sede = biblioteca.getSede(selectedSede);
+                if (sede == null) {
+                    resultadoTextArea.setText("Error: La sede especificada no existe.");
+                    return;
                 }
-               
+
+                List<Libro> librosEnSede = sede.getLibros();
+                StringBuilder resultado = new StringBuilder("Resultados de la búsqueda en " + selectedSede + ":\n");
+
+                for (Libro libro : librosEnSede) {
+                    if (libro.getTitulo().equalsIgnoreCase(nombreLibro) && libro.getISBN().equals(isbnLibro)) {
+                        resultado.append("Sede: ").append(sede.getNombre()).append("\n");
+                        resultado.append("Título: ").append(libro.getTitulo()).append("\n");
+                        resultado.append("ISBN: ").append(libro.getISBN()).append("\n");
+                        resultado.append("Volumen: ").append(libro.getVolumen()).append("\n");
+                        resultado.append("Editorial: ").append(libro.getEditorial()).append("\n");
+                        resultado.append("Autor: ").append(libro.getAutor().getNombre()).append(" ").append(libro.getAutor().getApellido()).append("\n");
+                        resultado.append("Biografía del Autor: ").append(libro.getAutor().getBiografia()).append("\n");
+                        resultado.append("Cantidad de Copias Disponibles: ").append(libro.getCantidadCopias()).append("\n\n");
+                    }
+                }
+
+                if (resultado.length() == ("Resultados de la búsqueda en " + selectedSede + ":\n").length()) {
+                    resultadoTextArea.setText("No se encontraron libros que coincidan con la búsqueda en " + selectedSede + ".");
+                } else {
+                    resultadoTextArea.setText(resultado.toString());
+                }
             }
         } catch (Exception ex) {
             resultadoTextArea.setText("Error: " + ex.getMessage());
         }
     }
+
 
 
     private void handleListarLibros() {
