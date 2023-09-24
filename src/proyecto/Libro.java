@@ -7,19 +7,22 @@ public class Libro {
 	int volumen;
 	String editorial;
 	Autor autor;
-	Sede sede;
 	int cantidadCopias;
+	private Sede sede; 
+
+    public Libro(String titulo, String ISBN, int volumen, String editorial, Autor autor, Sede sede, int cantidadCopias) {
+        this.titulo = titulo;
+        this.ISBN = ISBN;
+        this.volumen = volumen;
+        this.editorial = editorial;
+        this.autor = autor;
+        this.sede = sede; 
+        this.cantidadCopias = cantidadCopias;
+    }
 	
-	
-	public Libro(String titulo, String ISBN, int volumen, String editorial, Autor autor, Sede sede, int cantidadCopias) {
-	    this.titulo = titulo;
-	    this.ISBN = ISBN;
-	    this.volumen = volumen;
-	    this.editorial = editorial;
-	    this.autor = autor;
-	    this.sede = sede; 
-	    this.cantidadCopias = cantidadCopias;
-	}
+	public Sede getSede() {
+        return sede;
+    }
 
 
 	public String getTitulo() {
@@ -72,9 +75,7 @@ public class Libro {
 	}
 
 
-	public Sede getSede() {
-		return sede;
-	}
+	
 
 
 	public void setSede(Sede sede) {
@@ -102,15 +103,6 @@ public class Libro {
 	           "Cantidad de Copias: " + cantidadCopias + "\n";
 	}
 
-
-
-
-
-
-
-	
-	
-	
 	
 
 }

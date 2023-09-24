@@ -1,6 +1,8 @@
 package proyecto;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Biblioteca {
@@ -80,13 +82,21 @@ public class Biblioteca {
         }
         return sb.toString();
     }
-
-    public String listarLibrosEnSede(String nombreSede) {
-        Sede sede = getSede(nombreSede);
-        if (sede != null) {
-            return sede.listarLibros();
-        } else {
-            throw new IllegalArgumentException("La sede especificada no existe.");
+    
+    public List<Libro> listarLibrosEnAmbasSedes(String sede1, String sede2) {
+        List<Libro> librosEnAmbasSedes = new ArrayList<>();
+        
+        for (Sede sede : sedes.values()) {
+            if (sede.getNombre().equals(sede1) || sede.getNombre().equals(sede2)) {
+                librosEnAmbasSedes.addAll(sede.getLibros());
+            }
         }
+        
+        return librosEnAmbasSedes;
     }
+
+
+
+    
+
 }

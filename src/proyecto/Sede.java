@@ -1,20 +1,24 @@
 package proyecto;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+
+import java.util.List;
+
 
 
 public class Sede {
  private String nombre;
  private String campus;
- private Map<String, Libro> libros = new HashMap<>();
+ private List<Libro> libros = new ArrayList<>();
  private AVLTree arbolLibrosSede = new AVLTree(); 
  
 
-public Sede(String nombre, String campus) {
-    this.nombre = nombre;
-    this.campus = campus;
-}
+ public Sede(String nombre, String campus) {
+	    this.nombre = nombre;
+	    this.campus = campus;
+	    this.libros = new ArrayList<>(); 
+	}
+
 
     public String getNombre() {
         return nombre;
@@ -23,12 +27,15 @@ public Sede(String nombre, String campus) {
     public String getCampus() {
         return campus;
     }
-
+    
+    public List<Libro> getLibros() {
+        return libros;
+    }
     
 
     public String listarLibros() {
         StringBuilder sb = new StringBuilder();
-        for (Libro libro : libros.values()) {
+        for (Libro libro : libros) {
             sb.append("Sede: ").append(nombre).append(", Título: ").append(libro.getTitulo()).append(", ISBN: ").append(libro.getISBN()).append("\n");
         }
         return sb.toString();
@@ -36,11 +43,12 @@ public Sede(String nombre, String campus) {
 
 
 
+
    
 
-	public int getCantidadLibrosDisponibles() {
+    public int getCantidadLibrosDisponibles() {
         int cantidad = 0;
-        for (Libro libro : libros.values()) {
+        for (Libro libro : libros) {
             cantidad += libro.getCantidadCopias();
         }
         return cantidad;
@@ -48,32 +56,35 @@ public Sede(String nombre, String campus) {
 
     
     public void agregarLibro(Libro libro) {
-        libros.put(libro.getISBN(), libro);
+        libros.add(libro);
         arbolLibrosSede.insertar(libro);
     }
 
-    public boolean eliminarLibro(String ISBN) {
-        Libro libro = libros.get(ISBN);
 
-        if (libro != null) {
-            libros.remove(ISBN);
-            arbolLibrosSede.eliminar(ISBN);
-            return true; 
-        }
-        return false; 
-    }
+	 public boolean eliminarLibro(String ISBN) {
+		    for (Libro libro : libros) {
+		        if (libro.getISBN().equals(ISBN)) {
+		            libros.remove(libro);
+		            arbolLibrosSede.eliminar(ISBN);
+		            return true; 
+		        }
+		    }
+		    return false; 
+		}
+
 
     public Libro buscarLibro(String nombre, String ISBN) {
-        for (Libro libro : libros.values()) {
+        for (Libro libro : libros) {
             if (libro.getTitulo().equals(nombre) && libro.getISBN().equals(ISBN)) {
                 return libro;
             }
         }
         return null; 
     }
+
     
     public boolean existeLibroConISBN(String isbn) {
-        for (Libro libro : libros.values()) {
+        for (Libro libro : libros) {
             if (libro.getISBN().equals(isbn)) {
                 return true;
             }

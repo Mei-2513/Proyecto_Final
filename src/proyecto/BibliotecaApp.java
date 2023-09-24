@@ -18,16 +18,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 public class BibliotecaApp extends JFrame {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private Biblioteca biblioteca = Biblioteca.getInstancia();
+    private static final long serialVersionUID = 1L;
+    private Biblioteca biblioteca = Biblioteca.getInstancia();
     private JTextArea resultadoTextArea;
     private JTextField nombreSedeField = new JTextField(20);
-    
-    private Sede sedeActual; 
-
+    private Sede sedeActual;
+    private JButton listarLibrosEnAmbasSedesButton;
 
     public BibliotecaApp() {
         setTitle("Biblioteca App");
@@ -35,60 +31,53 @@ public class BibliotecaApp extends JFrame {
         setSize(600, 400);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(6, 1));
+        panel.setLayout(new GridLayout(7, 1));
         resultadoTextArea = new JTextArea(10, 40);
         resultadoTextArea.setEditable(false);
 
         JButton agregarLibroButton = new JButton("Agregar Libro");
         JButton eliminarLibroButton = new JButton("Eliminar Libro");
         JButton buscarLibroButton = new JButton("Buscar Libro");
-        
         JButton listarSedesButton = new JButton("Listar Sedes");
-        JButton listarLibrosEnSedeButton = new JButton("Listar Libros en Sede");
+        listarLibrosEnAmbasSedesButton = new JButton("Listar Libros en Ambas Sedes");
 
         panel.add(agregarLibroButton);
         panel.add(eliminarLibroButton);
         panel.add(buscarLibroButton);
-        
-        panel.add(listarSedesButton);
-        panel.add(listarLibrosEnSedeButton);
+        panel.add(listarSedesButton);    
+        panel.add(listarLibrosEnAmbasSedesButton); 
 
         agregarLibroButton.addActionListener(new ActionListener() {
-           
             public void actionPerformed(ActionEvent e) {
                 handleAgregarLibro();
             }
         });
 
         eliminarLibroButton.addActionListener(new ActionListener() {
-     
             public void actionPerformed(ActionEvent e) {
                 handleEliminarLibro();
             }
         });
 
         buscarLibroButton.addActionListener(new ActionListener() {
-           
             public void actionPerformed(ActionEvent e) {
                 handleBuscarLibro();
             }
         });
 
-        
-
         listarSedesButton.addActionListener(new ActionListener() {
-            
             public void actionPerformed(ActionEvent e) {
                 handleListarSedes();
             }
         });
 
-        listarLibrosEnSedeButton.addActionListener(new ActionListener() {
-         
+       
+
+        listarLibrosEnAmbasSedesButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                handleListarLibrosEnSede();
+                handleListarLibrosEnAmbasSedes();
             }
-        });
+        }); 
 
         resultadoTextArea = new JTextArea(10, 40);
         resultadoTextArea.setEditable(false);
@@ -165,6 +154,7 @@ public class BibliotecaApp extends JFrame {
                 } else {
                     volumen = Integer.parseInt(volumenText);
                 }
+
                 if (!editorial.matches("^[A-Za-z\\s]+$")) {
                     errores.add("La editorial debe contener solo letras y espacios.");
                 }
@@ -183,6 +173,12 @@ public class BibliotecaApp extends JFrame {
                     errores.add("Todos los campos deben ser diligenciados.");
                 }
 
+                // Verificar si el nombre de la sede es válido
+                String nombreSede = nombreSedeField.getText();
+                if (!nombreSede.equals("Tunja") && !nombreSede.equals("Duitama")) {
+                    errores.add("Error: El nombre de la sede debe ser 'Tunja' o 'Duitama'.");
+                }
+
                 if (!errores.isEmpty()) {
                     String mensajeError = "Errores:\n";
                     for (String error : errores) {
@@ -193,11 +189,9 @@ public class BibliotecaApp extends JFrame {
                 }
 
                 Autor autor = new Autor(nombreAutor, apellidoAutor, biografiaAutor);
-                String nombreSede = nombreSedeField.getText();
                 Sede sede = biblioteca.getSede(nombreSede);
 
                 if (sede != null) {
-                    
                     if (sede.existeLibroConISBN(isbn)) {
                         resultadoTextArea.setText("Ya existe un libro con el mismo ISBN en esta sede.");
                         return;
@@ -216,6 +210,7 @@ public class BibliotecaApp extends JFrame {
             resultadoTextArea.setText("Error inesperado: " + ex.getMessage());
         }
     }
+
 
 
 
@@ -341,26 +336,33 @@ public class BibliotecaApp extends JFrame {
         }
     }
 
-    private void handleListarLibrosEnSede() {
+
+
+    private void handleListarLibrosEnAmbasSedes() {
         try {
-            String nombreSede = nombreSedeField.getText();
-            String resultado = biblioteca.listarLibrosEnSede(nombreSede);
-            resultadoTextArea.setText(resultado);
+            List<Libro> librosEnAmbasSedes = biblioteca.listarLibrosEnAmbasSedes("Tunja", "Duitama");
+
+            StringBuilder resultado = new StringBuilder();
+            resultado.append("Listado de libros en ambas sedes:\n");
+
+            for (Libro libro : librosEnAmbasSedes) {
+                resultado.append("Sede: ").append(libro.getSede().getNombre()).append(", Título: ").append(libro.getTitulo()).append(", ISBN: ").append(libro.getISBN()).append("\n");
+            }
+
+            resultadoTextArea.setText(resultado.toString());
         } catch (Exception ex) {
             resultadoTextArea.setText("Error: " + ex.getMessage());
         }
     }
-    public void actualizarResultado(String mensaje) {
-        resultadoTextArea.setText(mensaje);
-    }
+
+
 
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
-           
             public void run() {
                 new BibliotecaApp();
             }
         });
     }
-} 
+}
