@@ -34,7 +34,7 @@ public class BibliotecaApp extends JFrame {
         setSize(600, 400);
 
         
-        getContentPane().setBackground(new Color(255, 182, 193));
+        
 
         JLabel bienvenidaLabel = new JLabel("¡Bienvenido a la Biblioteca Virtual!");
         bienvenidaLabel.setHorizontalAlignment(JLabel.CENTER);
