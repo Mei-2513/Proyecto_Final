@@ -8,7 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BibliotecaApp extends JFrame {
-    private Biblioteca biblioteca = Biblioteca.getInstancia();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Biblioteca biblioteca = Biblioteca.getInstancia();
     private JTextArea resultadoTextArea;
     private JTextField nombreSedeField = new JTextField(20);
 
@@ -37,21 +41,21 @@ public class BibliotecaApp extends JFrame {
         panel.add(listarLibrosEnSedeButton);
 
         agregarLibroButton.addActionListener(new ActionListener() {
-            @Override
+           
             public void actionPerformed(ActionEvent e) {
                 handleAgregarLibro();
             }
         });
 
         eliminarLibroButton.addActionListener(new ActionListener() {
-            @Override
+     
             public void actionPerformed(ActionEvent e) {
                 handleEliminarLibro();
             }
         });
 
         buscarLibroButton.addActionListener(new ActionListener() {
-            @Override
+           
             public void actionPerformed(ActionEvent e) {
                 handleBuscarLibro();
             }
@@ -60,14 +64,14 @@ public class BibliotecaApp extends JFrame {
         
 
         listarSedesButton.addActionListener(new ActionListener() {
-            @Override
+            
             public void actionPerformed(ActionEvent e) {
                 handleListarSedes();
             }
         });
 
         listarLibrosEnSedeButton.addActionListener(new ActionListener() {
-            @Override
+         
             public void actionPerformed(ActionEvent e) {
                 handleListarLibrosEnSede();
             }
@@ -130,7 +134,7 @@ public class BibliotecaApp extends JFrame {
                 String biografiaAutor = biografiaAutorField.getText();
                 String cantidadCopiasText = cantidadCopiasField.getText();
 
-                // Validaciones
+                
                 List<String> errores = new ArrayList<>();
 
                 int cantidadCopias = 0;
@@ -327,7 +331,7 @@ public class BibliotecaApp extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
-            @Override
+           
             public void run() {
                 new BibliotecaApp();
             }
