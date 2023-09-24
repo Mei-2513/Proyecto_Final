@@ -29,11 +29,23 @@ public Sede(String nombre, String campus) {
     public String listarLibros() {
         StringBuilder sb = new StringBuilder();
         for (Libro libro : libros.values()) {
-            sb.append("Título: ").append(libro.getTitulo()).append(", ISBN: ").append(libro.getISBN()).append("\n");
+            sb.append("Sede: ").append(nombre).append(", Título: ").append(libro.getTitulo()).append(", ISBN: ").append(libro.getISBN()).append("\n");
         }
         return sb.toString();
     }
-    
+
+
+
+   
+
+	public int getCantidadLibrosDisponibles() {
+        int cantidad = 0;
+        for (Libro libro : libros.values()) {
+            cantidad += libro.getCantidadCopias();
+        }
+        return cantidad;
+    }
+
     
     public void agregarLibro(Libro libro) {
         libros.put(libro.getISBN(), libro);
@@ -59,6 +71,17 @@ public Sede(String nombre, String campus) {
         }
         return null; 
     }
+    
+    public boolean existeLibroConISBN(String isbn) {
+        for (Libro libro : libros.values()) {
+            if (libro.getISBN().equals(isbn)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
 
 	

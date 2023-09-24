@@ -15,6 +15,9 @@ public class BibliotecaApp extends JFrame {
 	private Biblioteca biblioteca = Biblioteca.getInstancia();
     private JTextArea resultadoTextArea;
     private JTextField nombreSedeField = new JTextField(20);
+    
+    private Sede sedeActual; 
+
 
     public BibliotecaApp() {
         setTitle("Biblioteca App");
@@ -134,7 +137,6 @@ public class BibliotecaApp extends JFrame {
                 String biografiaAutor = biografiaAutorField.getText();
                 String cantidadCopiasText = cantidadCopiasField.getText();
 
-                
                 List<String> errores = new ArrayList<>();
 
                 int cantidadCopias = 0;
@@ -152,6 +154,9 @@ public class BibliotecaApp extends JFrame {
                     errores.add("El volumen debe contener solo números.");
                 } else {
                     volumen = Integer.parseInt(volumenText);
+                }
+                if (!editorial.matches("^[A-Za-z\\s]+$")) {
+                    errores.add("La editorial debe contener solo letras y espacios.");
                 }
 
                 if (!biografiaAutor.matches("^[A-Za-z\\s\\d\\-]+$")) {
@@ -182,6 +187,12 @@ public class BibliotecaApp extends JFrame {
                 Sede sede = biblioteca.getSede(nombreSede);
 
                 if (sede != null) {
+                    
+                    if (sede.existeLibroConISBN(isbn)) {
+                        resultadoTextArea.setText("Ya existe un libro con el mismo ISBN en esta sede.");
+                        return;
+                    }
+
                     Libro libro = new Libro(titulo, isbn, volumen, editorial, autor, sede, cantidadCopias);
                     biblioteca.agregarLibro(libro);
                     resultadoTextArea.setText("Libro agregado con éxito.");
@@ -240,55 +251,60 @@ public class BibliotecaApp extends JFrame {
         try {
             JTextField nombreLibroField = new JTextField(20);
             JTextField isbnLibroField = new JTextField(20);
-            JTextField nombreSedeField = new JTextField(20);
 
             JPanel inputPanel = new JPanel();
-            inputPanel.setLayout(new GridLayout(3, 2));
+            inputPanel.setLayout(new GridLayout(2, 2));
             inputPanel.add(new JLabel("Nombre del libro:"));
             inputPanel.add(nombreLibroField);
             inputPanel.add(new JLabel("ISBN del libro (13 dígitos numéricos):"));
             inputPanel.add(isbnLibroField);
-            inputPanel.add(new JLabel("Nombre de la sede:"));
-            inputPanel.add(nombreSedeField);
 
             int result = JOptionPane.showConfirmDialog(null, inputPanel, "Buscar Libro", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
                 String nombreLibro = nombreLibroField.getText();
                 String isbnLibro = isbnLibroField.getText();
-                String nombreSede = nombreSedeField.getText();
 
-                
-                if (nombreLibro.isEmpty() || isbnLibro.isEmpty() || nombreSede.isEmpty()) {
+                if (nombreLibro.isEmpty() || isbnLibro.isEmpty()) {
                     resultadoTextArea.setText("Error: Todos los campos deben ser diligenciados.");
                     return;
                 }
 
-                
                 if (!nombreLibro.matches("^[A-Za-z\\s]+$")) {
                     resultadoTextArea.setText("Error: El nombre del libro debe contener solo letras y espacios.");
                     return;
                 }
 
-               
                 if (!isbnLibro.matches("\\d{13}")) {
                     resultadoTextArea.setText("Error: El ISBN del libro debe contener exactamente 13 dígitos numéricos.");
                     return;
                 }
 
-                Libro libro = biblioteca.buscarLibro(nombreLibro, isbnLibro, nombreSede);
+                Object[] sedesArray = biblioteca.getSedes().keySet().toArray();
+                String selectedSede = (String) JOptionPane.showInputDialog(
+                    null,
+                    "Selecciona una sede:",
+                    "Seleccionar Sede",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    sedesArray,
+                    null
+                );
 
-                if (libro != null) {
-                    resultadoTextArea.setText("Información del libro:\n" +
-                            "Título: " + libro.getTitulo() + "\n" +
-                            "ISBN: " + libro.getISBN() + "\n" +
-                            "Volumen: " + libro.getVolumen() + "\n" +
-                            "Editorial: " + libro.getEditorial() + "\n" +
-                            "Nombre del Autor: " + libro.getAutor().getNombre() + "\n" +
-                            "Apellido del Autor: " + libro.getAutor().getApellido() + "\n" +
-                            "Biografía del Autor: " + libro.getAutor().getBiografia() + "\n" +
-                            "Cantidad de Copias Disponibles: " + libro.getCantidadCopias());
+                if (selectedSede == null) {
+                    resultadoTextArea.setText("Operación cancelada por el usuario.");
+                    return;
+                }
+
+                sedeActual = biblioteca.getSede(selectedSede);
+
+                
+                Libro libroEncontrado = sedeActual.buscarLibro(nombreLibro, isbnLibro);
+
+                if (libroEncontrado != null) {
+                    
+                    resultadoTextArea.setText("Detalles del libro encontrado:\n" + libroEncontrado.toString());
                 } else {
-                    resultadoTextArea.setText("El libro no se encuentra en la sede especificada.");
+                    resultadoTextArea.setText("El libro no se encuentra en la sede actual.");
                 }
             }
         } catch (Exception ex) {

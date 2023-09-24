@@ -90,6 +90,18 @@ public class Libro {
 	public void setCantidadCopias(int cantidadCopias) {
 		this.cantidadCopias = cantidadCopias;
 	}
+	
+	@Override
+	public String toString() {
+	    return "Título: " + titulo + "\n" +
+	           "ISBN: " + ISBN + "\n" +
+	           "Volumen: " + volumen + "\n" +
+	           "Editorial: " + editorial + "\n" +
+	           "Autor: " + autor.getNombre() + " " + autor.getApellido() + "\n" +
+	           "Biografía del Autor: " + autor.getBiografia() + "\n" +
+	           "Cantidad de Copias: " + cantidadCopias + "\n";
+	}
+
 
 
 

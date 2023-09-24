@@ -12,6 +12,10 @@ public class Biblioteca {
         sedes.put("Tunja", new Sede("Tunja", "Campus Facultad Medicina"));
         sedes.put("Duitama", new Sede("Duitama", "Centro Regional"));
     }
+    public Map<String, Sede> getSedes() {
+        return sedes;
+    }
+
 
     public static Biblioteca getInstancia() {
         return instancia;
